@@ -1,4 +1,9 @@
-
+<?php 
+session_start();
+?>
+<?php
+ob_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -38,16 +43,34 @@
 	      </button>
 	      <div class="collapse navbar-collapse" id="ftco-nav">
 	        <ul class="navbar-nav ml-auto">
-				<li class="nav-item active"><a href="index.html" class="nav-link">Home</a></li>
-				<li class="nav-item"><a href="menu.html" class="nav-link">Menu</a></li>
-				<li class="nav-item"><a href="services.html" class="nav-link">Services</a></li>
-				<li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
-			   
-				<li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-				<li class="nav-item cart"><a href="cart.html" class="nav-link"><span class="icon icon-shopping_cart"></span></a>
-				<li class="nav-item"><a href="login.html" class="nav-link">login</a></li>
-				<li class="nav-item"><a href="register.html" class="nav-link">register</a></li>
-  
+				<li class="nav-item active"><a href="index.php" class="nav-link">Home</a></li>
+				<li class="nav-item"><a href="menu.php" class="nav-link">Menu</a></li>
+				<li class="nav-item"><a href="services.php" class="nav-link">Services</a></li>
+				<li class="nav-item"><a href="about.php" class="nav-link">About</a></li>
+			   <?php 
+         if(isset($_SESSION['userId'])){
+         ?>
+				<li class="nav-item"><a href="contact.php" class="nav-link">Contact</a></li>
+				<li class="nav-item cart"><a href="cart.php" class="nav-link"><span class="icon icon-shopping_cart"></span></a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+           <?php echo $_SESSION['userName']?>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="aa/logout.php"> logout</a></li>
+          </ul>
+        </li>
+        <?php }
+        else{
+        
+        
+        ?>
+				<li class="nav-item"><a href="login.php" class="nav-link">login</a></li>
+				<li class="nav-item"><a href="register.php" class="nav-link">register</a></li>
+       <?php } ?>
 			  </ul>
 	      </div>
 		  </div>

@@ -1,5 +1,20 @@
 <?php require "aa/navber.php" ?>
+<?php require "config/config.php" ?>
+
   <?php 
+if(isset($_SESSION['userId'])){
+	header('location:index.php');
+}else{
+
+$fetch_register_query = "SELECT * FROM `register_user`";
+$fetch_register_prepare = $connection->prepare($fetch_register_query);
+$fetch_register_prepare->execute();
+
+$register_data = $fetch_register_prepare->fetchAll(PDO::FETCH_ASSOC);
+
+print_r($register_data);
+
+
   
   if(isset($_POST['register']))
   {
@@ -8,10 +23,62 @@
     $password = $_POST['password'];
 
     $hash_password = password_hash($password,PASSWORD_BCRYPT);
+    
+
+	if(empty($userName) || empty($email) || empty($password))
+    {
+     
+		echo "<script>alert('kindly fill all the fields')</script>";
+       
+
+	}else{
+		$isEmailExist = true;
+
+     
+
+
+		foreach($register_data as $user){
+			if($user['user_email'] === $email){
+				echo"<script>alert('Email already exits')</script>";
+				return;
+			}else{
+				
+				$isEmailExist = false;
+
+			}
+		} 
+
+
+		if(!$isEmailExist)
+		{
+			$register_user_query = "INSERT INTO `register_user`(`user_name`, `user_email`, `user_password`) 
+			VALUES (:userName,:userEmail,:userPassword)";
+		   $register_user_prepare = $connection->prepare($register_user_query);
+		   $register_user_prepare->bindParam(':userName',$userName);
+		   $register_user_prepare->bindParam(':userEmail',$email);
+		   $register_user_prepare->bindParam(':userPassword',$hash_password);
+		   $register_user_prepare->execute();
+		   header('location:login.php');
+
+
+		}
+
+
+
+
+
+
+
+
+
+	}
+
+
+
 
   }
   
-  
+}
   
   
   ?>
@@ -24,7 +91,7 @@
 
             <div class="col-md-7 col-sm-12 text-center ftco-animate">
             	<h1 class="mb-3 mt-5 bread">Register</h1>
-	            <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home</a></span> <span>Register</span></p>
+	            <p class="breadcrumbs"><span class="mr-2"><a href="index.php">Home</a></span> <span>Register</span></p>
             </div>
 
           </div>
@@ -36,7 +103,7 @@
       <div class="container">
         <div class="row">
           <div class="col-md-12 ftco-animate">
-			<form action="register.php" class="billing-form ftco-bg-dark p-3 p-md-5" >
+			<form action="register.php" method="post" class="billing-form ftco-bg-dark p-3 p-md-5" >
 				<h3 class="mb-4 billing-heading">Register</h3>
 	          	<div class="row align-items-end">
                  <div class="col-md-12">
